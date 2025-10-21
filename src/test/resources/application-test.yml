@@ -1,0 +1,36 @@
+# Test profile configuration
+# This file configures the application for testing with H2 in-memory database
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+
+# Disable external API calls for testing
+bluelytics:
+  api:
+    url: http://localhost:9999/mock-api
+
+# Logging configuration for tests
+logging:
+  level:
+    com.example.testapi: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

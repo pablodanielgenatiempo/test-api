@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,6 +25,9 @@ import static org.mockito.Mockito.*;
 class CotizacionServiceTest {
 
     @Mock
+    private WebClient.Builder webClientBuilder;
+
+    @Mock
     private WebClient webClient;
 
     @Mock
@@ -37,16 +39,21 @@ class CotizacionServiceTest {
     @Mock
     private WebClient.ResponseSpec responseSpec;
 
-    @InjectMocks
     private CotizacionService cotizacionService;
 
     @BeforeEach
     void setUp() {
+        // Setup WebClient.Builder mock
+        when(webClientBuilder.build()).thenReturn(webClient);
+        
         // Setup WebClient mock chain
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(anyString())).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
 
+        // Create service instance with mocked WebClient.Builder
+        cotizacionService = new CotizacionService(webClientBuilder);
+        
         // Configure service with test URL
         cotizacionService.setBluelyticsApiUrl("https://api.bluelytics.com.ar/v2/latest");
     }
